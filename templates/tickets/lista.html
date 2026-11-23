@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block titulo %}Mis tickets | Cyber Solutions RD{% endblock %}
+
+{% block contenido %}
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+      <h1 class="h2 mb-1">Mis tickets</h1>
+      <p class="mb-0">Consulta tus solicitudes y conversa con nuestro equipo.</p>
+    </div>
+    <a class="btn btn-primary" href="{% url 'tickets:nuevo' %}">+ Nuevo ticket</a>
+  </div>
+
+  {% if tickets %}
+    <div class="table-responsive tarjeta p-2 p-md-3">
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th scope="col">Asunto</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ticket in tickets %}
+            <tr>
+              <td><a href="{% url 'tickets:detalle' ticket.id %}">{{ ticket.asunto }}</a></td>
+              <td>{{ ticket.get_tipo_display }}</td>
+              <td>{{ ticket.get_estado_display }}</td>
+              <td>{{ ticket.fecha_creacion|date:"d/m/Y H:i" }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="tarjeta p-4">
+      <p class="mb-0">Todavía no tienes tickets.</p>
+    </div>
+  {% endif %}
+{% endblock %}

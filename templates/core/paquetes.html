@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block titulo %}Paquetes · Cyber Solutions RD{% endblock %}
+
+{% block contenido %}
+<section class="pantalla-compacta pantalla-paquetes">
+  <div class="text-center mb-3">
+    <h1 class="h3 mb-1">Nuestros paquetes</h1>
+    <p class="text-secondary mb-0">
+      Elige la protección que mejor se adapta a tu empresa.
+    </p>
+  </div>
+
+  {% if form %}
+    <form
+      method="post"
+      action="{% url 'core:paquetes' %}{% if recomendado_id %}?recomendado={{ recomendado_id }}{% endif %}"
+      id="formulario-contratacion"
+    >
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">
+          {% for error in form.non_field_errors %}
+            <p class="mb-0">{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+  {% endif %}
+
+  {% if paquetes %}
+    <div class="row row-cols-1 row-cols-lg-3 g-3">
+      {% for paquete in paquetes %}
+        <div class="col">
+          <article class="tarjeta tarjeta-paquete h-100 p-3 d-flex flex-column{% if paquete.id == recomendado_id %} tarjeta-recomendada{% endif %}">
+            <div class="paquete-etiqueta-slot">
+              {% if paquete.id == recomendado_id %}
+                <span class="etiqueta-recomendada align-self-start">Recomendado</span>
+              {% endif %}
+            </div>
+            <h2 class="h5 mb-1">{{ paquete.nombre }}</h2>
+            <p class="fs-5 fw-bold mb-2">
+              RD$ {{ paquete.precio_mensual|floatformat:"2gu" }}
+              <span class="fs-6 fw-normal text-secondary">/ mes</span>
+            </p>
+            <div class="servicios-paquete mb-3">
+              {{ paquete.servicios_incluidos|linebreaksbr }}
+            </div>
+            {% if form %}
+              <div class="mt-auto">
+                <input
+                  class="btn-check"
+                  type="radio"
+                  name="paquete"
+                  value="{{ paquete.id }}"
+                  id="paquete-{{ paquete.id }}"
+                  data-nombre="{{ paquete.nombre }}"
+                  data-precio="{{ paquete.precio_mensual }}"
+                  {% if paquete.id == seleccionado_id %}checked{% endif %}
+                  required
+                >
+                <label class="btn btn-outline-primary w-100" for="paquete-{{ paquete.id }}">
+                  Seleccionar paquete
+                </label>
+              </div>
+            {% endif %}
+          </article>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="tarjeta p-4 text-center">
+      <p class="mb-0">No hay paquetes disponibles en este momento.</p>
+    </div>
+  {% endif %}
+
+  {% if form %}
+    {% for error in form.paquete.errors %}
+      <div class="text-danger mt-2">{{ error }}</div>
+    {% endfor %}
+
+    {% if paquetes %}
+      <div class="tarjeta p-3 mt-3">
+        <div class="row g-3 align-items-end">
+          <div class="col-12 col-md-4">
+            <h2 class="h5 mb-2">Tipo de contrato</h2>
+            <label class="form-label mb-1" for="{{ form.tipo_contrato.id_for_label }}">
+              {{ form.tipo_contrato.label }}
+            </label>
+            {{ form.tipo_contrato }}
+            {% for error in form.tipo_contrato.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-12 col-md-5">
+            <p class="mb-0">
+              <strong>Resumen:</strong>
+              <span id="resumen-contratacion" aria-live="polite">
+                Selecciona un paquete para ver el precio.
+              </span>
+            </p>
+          </div>
+          <div class="col-12 col-md-3">
+            <button class="btn btn-primary w-100" type="submit">Solicitar contratación</button>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    </form>
+  {% elif not user.is_authenticated %}
+    <div class="text-center mt-4">
+      <a class="btn btn-primary" href="/cuentas/acceso/">
+        Ingresar para solicitar contratación
+      </a>
+    </div>
+  {% elif user.rol != "CLIENTE" %}
+    <p class="alert alert-info mt-4">
+      Solo las cuentas de cliente pueden solicitar una contratación.
+    </p>
+  {% endif %}
+</section>
+
+{% if form and paquetes %}
+  <script>
+    (() => {
+      const formulario = document.getElementById("formulario-contratacion");
+      const resumen = document.getElementById("resumen-contratacion");
+      const selectorTipo = document.getElementById("tipo-contrato");
+      const descuentosPuntosBase = {
+        MENSUAL: 0,
+        TRIMESTRAL: 500,
+        ANUAL: 1000
+      };
+      const nombresTipo = {
+        MENSUAL: "Mensual",
+        TRIMESTRAL: "Trimestral",
+        ANUAL: "Anual"
+      };
+
+      function actualizarResumen() {
+        const paqueteSeleccionado = formulario.querySelector(
+          'input[name="paquete"]:checked'
+        );
+        if (!paqueteSeleccionado) {
+          resumen.textContent = "Selecciona un paquete para ver el precio.";
+          return;
+        }
+
+        const precioBaseCentavos = Math.round(
+          Number.parseFloat(paqueteSeleccionado.dataset.precio) * 100
+        );
+        const tipo = selectorTipo.value;
+        const precioMensualCentavos = Math.floor(
+          (
+            precioBaseCentavos * (10000 - descuentosPuntosBase[tipo]) + 5000
+          ) / 10000
+        );
+        const precioFormateado = (precioMensualCentavos / 100).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+        resumen.textContent =
+          `${paqueteSeleccionado.dataset.nombre} · ${nombresTipo[tipo]} · RD$ ${precioFormateado} por mes`;
+      }
+
+      formulario.addEventListener("change", actualizarResumen);
+      actualizarResumen();
+    })();
+  </script>
+{% endif %}
+{% endblock %}

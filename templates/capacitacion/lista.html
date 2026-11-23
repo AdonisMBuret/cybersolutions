@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block titulo %}Capacitación | Cyber Solutions RD{% endblock %}
+
+{% block contenido %}
+  <div class="mb-4">
+    <h1 class="h2">Capacitación</h1>
+    <p class="mb-2">Aprende prácticas sencillas para cuidar la información de tu negocio.</p>
+    <p class="fw-semibold mb-2">Progreso: {{ completadas }} de {{ total }} actividades completadas</p>
+    <div class="progress" role="progressbar" aria-label="Progreso de capacitación" aria-valuenow="{{ porcentaje }}" aria-valuemin="0" aria-valuemax="100">
+      <div class="progress-bar bg-danger" style="width: {{ porcentaje }}%"></div>
+    </div>
+  </div>
+
+  {% if actividades %}
+    <div class="d-grid gap-3">
+      {% for actividad in actividades %}
+        <article class="tarjeta p-3 p-md-4">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+              <h2 class="h5 mb-1">{{ actividad.leccion.titulo }}</h2>
+              <p class="text-muted mb-2">Duración: {{ actividad.leccion.duracion_minutos }} minutos</p>
+              <span class="insignia-progreso estado-{{ actividad.clase_estado }}">{{ actividad.estado_texto }}</span>
+              {% if actividad.leccion.tipo == "SIMULACRO" and actividad.puntaje != None %}
+                <span class="ms-2">Puntaje anterior: {{ actividad.puntaje }} / 100</span>
+              {% endif %}
+            </div>
+            <div>
+              {% if actividad.leccion.tipo == "SIMULACRO" %}
+                <a class="btn btn-primary" href="{% url 'capacitacion:simulacro' actividad.leccion.id %}">Abrir simulacro</a>
+              {% else %}
+                <a class="btn btn-primary" href="{% url 'capacitacion:leccion' actividad.leccion.id %}">Abrir lección</a>
+              {% endif %}
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="tarjeta p-4">
+      <p class="mb-0">Todavía no hay actividades de capacitación disponibles.</p>
+    </div>
+  {% endif %}
+{% endblock %}

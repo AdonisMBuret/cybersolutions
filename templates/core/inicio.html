@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block titulo %}Inicio · Cyber Solutions RD{% endblock %}
+
+{% block contenido %}
+<section class="franja-bienvenida p-4 p-md-5 mb-5">
+  <div class="row align-items-center g-4">
+    <div class="col-12 col-lg-7">
+      <h1 class="display-5 fw-bold mb-3">Protege tu negocio sin tecnicismos</h1>
+      <p class="lead mb-4">
+        Diagnóstico, respaldo, protección y capacitación para tu empresa
+      </p>
+      <a class="btn btn-primary btn-lg" href="/diagnostico/">
+        Hacer diagnóstico gratis
+      </a>
+    </div>
+    <div class="col-12 col-lg-5">
+      <div class="recuadro-escudo d-flex align-items-center justify-content-center text-center p-4">
+        <p class="h4 mb-0">Imagen: escudo de seguridad</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="titulo-paquetes">
+  <h2 class="h2 text-center mb-4" id="titulo-paquetes">Nuestros paquetes</h2>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for paquete in paquetes %}
+      <div class="col">
+        <article class="tarjeta h-100 p-4 d-flex flex-column">
+          <h3 class="h4 mb-3">{{ paquete.nombre }}</h3>
+          <p class="fs-4 fw-bold mb-4">
+            RD$ {{ paquete.precio_mensual|floatformat:"2gu" }}
+            <span class="fs-6 fw-normal text-secondary">/ mes</span>
+          </p>
+          <a class="btn btn-outline-primary mt-auto" href="/paquetes/">
+            Ver más
+          </a>
+        </article>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <p class="text-center text-secondary">
+          No hay paquetes disponibles en este momento.
+        </p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

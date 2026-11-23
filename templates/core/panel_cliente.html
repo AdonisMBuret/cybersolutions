@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block titulo %}Mi panel | Cyber Solutions RD{% endblock %}
+
+{% block contenido %}
+  <div class="panel-escritorio panel-compacto">
+    <aside class="panel-menu" aria-label="Menú del cliente">
+      <h2 class="h5 mb-3">Mi panel</h2>
+      <nav class="nav flex-column">
+        <a class="nav-link" href="{% url 'core:panel' %}">Inicio</a>
+        <a class="nav-link" href="/diagnostico/">Diagnóstico</a>
+        <a class="nav-link" href="#contrato">Mi contrato</a>
+        <a class="nav-link" href="/capacitacion/">Capacitación</a>
+        <a class="nav-link" href="/tickets/">Tickets</a>
+        {% if ultimo_diagnostico %}
+          <a class="nav-link" href="{% url 'diagnostico:reporte_pdf' ultimo_diagnostico.id %}">Reportes</a>
+        {% else %}
+          <a class="nav-link" href="/diagnostico/">Reportes</a>
+        {% endif %}
+      </nav>
+    </aside>
+
+    <div class="panel-contenido">
+      <div class="mb-3">
+        <h1 class="h2">Bienvenido, {{ empresa.nombre_comercial }}</h1>
+        <p class="mb-0">Aquí puedes consultar el estado de los servicios de tu empresa.</p>
+      </div>
+
+      <div class="row g-2 mb-3">
+        <div class="col-12 col-md-4">
+          <section class="tarjeta h-100 p-3">
+            <h2 class="h6">Índice de protección</h2>
+            {% if ultimo_diagnostico %}
+              <p class="panel-valor mb-0">{{ ultimo_diagnostico.indice_proteccion }} / 6</p>
+            {% else %}
+              <p class="panel-valor mb-0">Sin diagnóstico</p>
+            {% endif %}
+          </section>
+        </div>
+        <div class="col-12 col-md-4" id="contrato">
+          <section class="tarjeta h-100 p-3">
+            <h2 class="h6">Contrato activo</h2>
+            {% if contrato_activo %}
+              <p class="panel-valor mb-0">{{ contrato_activo.paquete.nombre }}</p>
+            {% else %}
+              <p class="panel-valor mb-0">Sin contrato</p>
+            {% endif %}
+          </section>
+        </div>
+        <div class="col-12 col-md-4">
+          <section class="tarjeta h-100 p-3">
+            <h2 class="h6">Tickets abiertos</h2>
+            <p class="panel-valor mb-0">{{ tickets_abiertos }}</p>
+          </section>
+        </div>
+      </div>
+
+      <section class="tarjeta p-3">
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-2">
+          <h2 class="h4 mb-0">Últimos tickets</h2>
+          <a class="btn btn-primary" href="{% url 'tickets:nuevo' %}">+ Nuevo ticket</a>
+        </div>
+        {% if ultimos_tickets %}
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th scope="col">Asunto</th>
+                  <th scope="col">Tipo</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Fecha</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for ticket in ultimos_tickets %}
+                  <tr>
+                    <td><a href="{% url 'tickets:detalle' ticket.id %}">{{ ticket.asunto }}</a></td>
+                    <td>{{ ticket.get_tipo_display }}</td>
+                    <td>{{ ticket.get_estado_display }}</td>
+                    <td>{{ ticket.fecha_creacion|date:"d/m/Y H:i" }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p class="mb-0">Todavía no tienes tickets.</p>
+        {% endif %}
+      </section>
+    </div>
+  </div>
+{% endblock %}

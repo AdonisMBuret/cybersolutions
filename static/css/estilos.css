@@ -1,0 +1,327 @@
+:root {
+  --color-primario: #A42526;
+  --color-primario-hover: #8A1F20;
+  --color-fondo: #F7F7F7;
+  --color-tarjeta: #FFFFFF;
+  --color-borde: #DDDDDD;
+  --color-texto: #262626;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  line-height: 1.45;
+  overflow-wrap: break-word;
+}
+
+a {
+  color: var(--color-primario);
+}
+
+a:hover,
+a:focus {
+  color: var(--color-primario-hover);
+}
+
+.contenido-principal {
+  flex: 1 0 auto;
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+
+.barra-superior {
+  background-color: var(--color-primario);
+}
+
+.barra-superior .nav-link {
+  color: #FFFFFF;
+}
+
+.barra-superior .nav-link:hover,
+.barra-superior .nav-link:focus {
+  color: #F3DCDC;
+}
+
+.btn-primary {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--color-primario-hover);
+  border-color: var(--color-primario-hover);
+}
+
+.btn {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.9rem;
+  line-height: 1.25;
+  white-space: normal;
+}
+
+.btn-outline-primary {
+  color: var(--color-primario);
+  border-color: var(--color-primario);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-check:checked + .btn-outline-primary {
+  color: #FFFFFF;
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+}
+
+.form-control,
+.form-select {
+  min-height: 40px;
+  border-color: var(--color-borde);
+  border-radius: 0.5rem;
+}
+
+textarea.form-control {
+  min-height: 5rem;
+}
+
+.tarjeta {
+  background-color: var(--color-tarjeta);
+  border: 1px solid var(--color-borde);
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(38, 38, 38, 0.04);
+}
+
+.table {
+  --bs-table-border-color: var(--color-borde);
+  vertical-align: middle;
+}
+
+.table > thead > tr > th {
+  background-color: #EEEEEE;
+  color: var(--color-texto);
+  border-bottom: 1px solid var(--color-borde);
+  font-weight: 700;
+}
+
+.table > :not(caption) > * > * {
+  padding: 0.5rem 0.65rem;
+  border-bottom-width: 1px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.tarjeta-recomendada {
+  border: 3px solid var(--color-primario);
+}
+
+.etiqueta-recomendada {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background-color: var(--color-primario);
+  color: #FFFFFF;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.franja-bienvenida {
+  background-color: #FBEFEF;
+  border-radius: 1rem;
+}
+
+.recuadro-escudo {
+  min-height: 15rem;
+  background-color: #F5DADA;
+  border: 1px solid var(--color-borde);
+  border-radius: 0.75rem;
+}
+
+.insignia-riesgo {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.riesgo-alto {
+  background-color: #F8D7DA;
+  color: #842029;
+}
+
+.riesgo-medio {
+  background-color: #FFF3CD;
+  color: #664D03;
+}
+
+.riesgo-bajo {
+  background-color: #D1E7DD;
+  color: #0F5132;
+}
+
+.resumen-pago {
+  border: 1px solid var(--color-borde);
+  border-radius: 0.75rem;
+  background-color: #FFFFFF;
+}
+
+.insignia-progreso {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.estado-pendiente {
+  background-color: #E9ECEF;
+  color: #41464B;
+}
+
+.estado-en-curso {
+  background-color: #FFF3CD;
+  color: #664D03;
+}
+
+.estado-completada {
+  background-color: #D1E7DD;
+  color: #0F5132;
+}
+
+.burbuja-conversacion {
+  max-width: 90%;
+  padding: 1rem;
+  border: 1px solid var(--color-borde);
+  border-radius: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.mensaje-cliente {
+  align-self: flex-start;
+  background-color: #E9ECEF;
+}
+
+.mensaje-personal {
+  align-self: flex-end;
+  background-color: #FBEFEF;
+}
+
+.panel-escritorio {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.panel-menu {
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  background-color: #3A3A3A;
+  color: #FFFFFF;
+}
+
+.panel-menu .nav-link {
+  color: #FFFFFF;
+  border-radius: 0.5rem;
+}
+
+.panel-menu .nav-link:hover,
+.panel-menu .nav-link:focus {
+  background-color: #545454;
+  color: #FFFFFF;
+}
+
+.panel-valor {
+  font-size: 1.5rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.pantalla-compacta {
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+}
+
+.pantalla-diagnostico .tarjeta {
+  padding: 1rem !important;
+}
+
+.pregunta-diagnostico {
+  min-height: 5.25rem;
+  margin: 0;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--color-borde);
+  border-radius: 0.65rem;
+  background-color: #FFFFFF;
+}
+
+.pregunta-diagnostico legend {
+  margin-bottom: 0.45rem;
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+.tarjeta-paquete {
+  min-height: 13.5rem;
+}
+
+.paquete-etiqueta-slot {
+  min-height: 1.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.servicios-paquete {
+  line-height: 1.45;
+}
+
+.lista-recomendaciones {
+  padding-left: 1.15rem;
+  line-height: 1.35;
+}
+
+.lista-recomendaciones li + li {
+  margin-top: 0.35rem;
+}
+
+.pantalla-paquetes .tarjeta-paquete {
+  padding: 1rem !important;
+}
+
+.pie-pagina {
+  background-color: #262626;
+}
+
+@media (max-width: 767.98px) {
+  .panel-escritorio {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .panel-menu .nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.15rem;
+  }
+
+  .burbuja-conversacion {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 768px) and (max-height: 800px) {
+  .panel-escritorio {
+    grid-template-columns: 205px minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .panel-menu {
+    padding: 0.8rem;
+  }
+
+  .panel-menu .nav-link {
+    padding: 0.35rem 0.6rem;
+  }
+}

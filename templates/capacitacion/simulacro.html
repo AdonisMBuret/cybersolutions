@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ leccion.titulo }} | Capacitación{% endblock %}
+
+{% block contenido %}
+  <div class="mb-3">
+    <a href="{% url 'capacitacion:lista' %}">← Volver a capacitación</a>
+  </div>
+  <div class="mb-4">
+    <p class="text-muted mb-1">Simulacro · {{ leccion.duracion_minutos }} minutos</p>
+    <h1 class="h2">{{ leccion.titulo }}</h1>
+    <p>Lee cada ejemplo y marca si crees que es fraude. Son cinco correos de práctica.</p>
+  </div>
+
+  {% if resultado %}
+    <div class="alert alert-info" role="status">
+      <strong>Tu puntaje: {{ puntaje }} / 100</strong>
+    </div>
+  {% elif puntaje_anterior != None %}
+    <p class="fw-semibold">Puntaje anterior: {{ puntaje_anterior }} / 100</p>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+    {% endif %}
+    <div class="d-grid gap-3">
+      {% for correo in correos %}
+        <article class="tarjeta p-3 p-md-4">
+          <p class="text-muted mb-2">Correo de ejemplo {{ correo.id }}</p>
+          <p class="mb-1"><strong>De:</strong> {{ correo.remitente }}</p>
+          <p class="mb-2"><strong>Asunto:</strong> {{ correo.asunto }}</p>
+          <div class="mb-3">{{ correo.contenido }}</div>
+
+          {% if resultado %}
+            {% if correo.es_correcta %}
+              <p class="mb-1"><span class="badge text-bg-success">Respuesta correcta</span></p>
+            {% else %}
+              <p class="mb-1"><span class="badge text-bg-danger">Respuesta incorrecta</span></p>
+            {% endif %}
+            <p class="mb-1">Tu respuesta: {{ correo.respuesta_usuario }} · Respuesta correcta: {{ correo.respuesta_correcta }}</p>
+            <p class="mb-0"><strong>Explicación:</strong> {{ correo.explicacion }}</p>
+          {% else %}
+            <fieldset>
+              <legend class="fs-6 fw-semibold">¿Es fraude?</legend>
+              <div class="d-flex gap-2">
+                {% for radio in correo.campo_form %}
+                  {{ radio.tag }}
+                  <label class="btn btn-outline-primary" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                {% endfor %}
+              </div>
+              {% for error in correo.campo_form.errors %}
+                <div class="text-danger small mt-2">{{ error }}</div>
+              {% endfor %}
+            </fieldset>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+
+    {% if not resultado %}
+      <button class="btn btn-primary mt-4" type="submit">Enviar respuestas</button>
+    {% else %}
+      <a class="btn btn-primary mt-4" href="{% url 'capacitacion:lista' %}">Volver a capacitación</a>
+    {% endif %}
+  </form>
+{% endblock %}

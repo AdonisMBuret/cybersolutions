@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ ticket.asunto }} | Tickets{% endblock %}
+
+{% block contenido %}
+  <div class="mb-3">
+    {% if es_personal %}
+      <a href="{% url 'tickets:gestion' %}">← Volver a gestión de tickets</a>
+    {% else %}
+      <a href="{% url 'tickets:lista' %}">← Volver a mis tickets</a>
+    {% endif %}
+  </div>
+
+  <section class="tarjeta p-3 p-md-4 mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+      <div>
+        <h1 class="h2 mb-2">{{ ticket.asunto }}</h1>
+        <p class="mb-1"><strong>Empresa:</strong> {{ ticket.empresa.nombre_comercial }}</p>
+        <p class="mb-1"><strong>Tipo:</strong> {{ ticket.get_tipo_display }}</p>
+        <p class="mb-1"><strong>Prioridad:</strong> {{ ticket.get_prioridad_display }}</p>
+        <p class="mb-0"><strong>Estado:</strong> {{ ticket.get_estado_display }}</p>
+      </div>
+      <p class="text-muted mb-0">Creado el {{ ticket.fecha_creacion|date:"d/m/Y H:i" }}</p>
+    </div>
+  </section>
+
+  {% if es_personal %}
+    <form method="post" class="tarjeta p-3 mb-4">
+      {% csrf_token %}
+      <input type="hidden" name="accion" value="estado">
+      <label class="form-label" for="{{ form_estado.estado.id_for_label }}">{{ form_estado.estado.label }}</label>
+      {{ form_estado.estado }}
+      {% for error in form_estado.estado.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+      {% endfor %}
+      <button class="btn btn-primary mt-3" type="submit">Actualizar estado</button>
+    </form>
+  {% endif %}
+
+  <section class="mb-4">
+    <h2 class="h4 mb-3">Conversación</h2>
+    <div class="d-flex flex-column gap-3">
+      <article class="burbuja-conversacion mensaje-cliente">
+        <p class="small text-muted mb-1">Descripción inicial · {{ ticket.fecha_creacion|date:"d/m/Y H:i" }}</p>
+        <div>{{ ticket.descripcion|linebreaksbr }}</div>
+      </article>
+      {% for seguimiento in seguimientos %}
+        {% if seguimiento.usuario.rol == "CLIENTE" %}
+          <article class="burbuja-conversacion mensaje-cliente">
+        {% else %}
+          <article class="burbuja-conversacion mensaje-personal">
+        {% endif %}
+            <p class="small text-muted mb-1">
+              {{ seguimiento.usuario.email }} · {{ seguimiento.fecha_seguimiento|date:"d/m/Y H:i" }}
+            </p>
+            <div>{{ seguimiento.mensaje|linebreaksbr }}</div>
+          </article>
+      {% empty %}
+        <p class="text-muted">Aún no hay respuestas en esta conversación.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <form method="post" class="tarjeta p-3 p-md-4">
+    {% csrf_token %}
+    <input type="hidden" name="accion" value="mensaje">
+    <label class="form-label" for="{{ form_mensaje.mensaje.id_for_label }}">{{ form_mensaje.mensaje.label }}</label>
+    {{ form_mensaje.mensaje }}
+    {% for error in form_mensaje.mensaje.errors %}
+      <div class="text-danger small mt-1">{{ error }}</div>
+    {% endfor %}
+    <button class="btn btn-primary mt-3" type="submit">Enviar</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block titulo %}Nuevo ticket | Cyber Solutions RD{% endblock %}
+
+{% block contenido %}
+  <div class="mb-3">
+    <a href="{% url 'tickets:lista' %}">← Volver a mis tickets</a>
+  </div>
+  <section class="tarjeta p-4 p-md-5">
+    <h1 class="h2 mb-2">Crear un ticket</h1>
+    <p class="mb-4">Cuéntanos qué necesitas y nuestro equipo te responderá.</p>
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="mb-3">
+          <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% for error in field.errors %}
+            <div class="text-danger small mt-1">{{ error }}</div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+      <button class="btn btn-primary" type="submit">Crear ticket</button>
+    </form>
+  </section>
+{% endblock %}

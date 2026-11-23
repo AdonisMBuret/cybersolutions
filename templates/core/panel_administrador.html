@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block titulo %}Panel de administración | Cyber Solutions RD{% endblock %}
+
+{% block contenido %}
+  <div class="panel-escritorio panel-compacto">
+    <aside class="panel-menu" aria-label="Menú de administración">
+      <h2 class="h5 mb-3">Administración</h2>
+      <nav class="nav flex-column">
+        <a class="nav-link" href="{% url 'core:panel_admin' %}">Resumen</a>
+        <a class="nav-link" href="{% url 'admin:core_empresa_changelist' %}">Clientes</a>
+        <a class="nav-link" href="{% url 'admin:core_contrato_changelist' %}">Contratos</a>
+        <a class="nav-link" href="{% url 'admin:core_paquete_changelist' %}">Paquetes</a>
+        <a class="nav-link" href="{% url 'admin:capacitacion_leccion_changelist' %}">Lecciones</a>
+        <a class="nav-link" href="{% url 'tickets:gestion' %}">Tickets</a>
+        <a class="nav-link" href="{% url 'admin:diagnostico_reporte_changelist' %}">Reportes</a>
+      </nav>
+    </aside>
+
+    <div class="panel-contenido">
+      <div class="mb-3">
+        <h1 class="h2 mb-1">Resumen</h1>
+        <p class="mb-0">Indicadores generales de Cyber Solutions RD.</p>
+      </div>
+
+      <div class="row g-2 mb-3">
+        <div class="col-12 col-sm-6 col-xl-3">
+          <section class="tarjeta h-100 p-3">
+            <h2 class="h6">Clientes activos</h2>
+            <p class="panel-valor mb-0">{{ clientes_activos }}</p>
+          </section>
+        </div>
+        <div class="col-12 col-sm-6 col-xl-3">
+          <section class="tarjeta h-100 p-3">
+            <h2 class="h6">Contratos vigentes</h2>
+            <p class="panel-valor mb-0">{{ contratos_vigentes }}</p>
+          </section>
+        </div>
+        <div class="col-12 col-sm-6 col-xl-3">
+          <section class="tarjeta h-100 p-3">
+            <h2 class="h6">Tickets abiertos</h2>
+            <p class="panel-valor mb-0">{{ tickets_abiertos }}</p>
+          </section>
+        </div>
+        <div class="col-12 col-sm-6 col-xl-3">
+          <section class="tarjeta h-100 p-3">
+            <h2 class="h6">Ingresos del mes</h2>
+            <p class="panel-valor mb-0">RD$ {{ ingresos_mes|floatformat:"2g" }}</p>
+          </section>
+        </div>
+      </div>
+
+      <section class="tarjeta p-3">
+        <h2 class="h5 mb-2">Contratos</h2>
+        <form method="get" class="row g-2 align-items-end mb-3">
+          <div class="col-12 col-lg-5">
+            <label class="form-label" for="{{ form.q.id_for_label }}">{{ form.q.label }}</label>
+            {{ form.q }}
+            {% for error in form.q.errors %}
+              <div class="text-danger small mt-1">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-12 col-lg-4">
+            <label class="form-label" for="{{ form.estado.id_for_label }}">{{ form.estado.label }}</label>
+            {{ form.estado }}
+            {% for error in form.estado.errors %}
+              <div class="text-danger small mt-1">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-outline-secondary" type="submit">Filtrar</button>
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-primary" type="submit" name="exportar" value="csv">Exportar</button>
+          </div>
+        </form>
+
+        {% if contratos %}
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Paquete</th>
+                  <th scope="col">Tipo</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Vence</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for contrato in contratos %}
+                  <tr>
+                    <td>{{ contrato.empresa.nombre_comercial }}</td>
+                    <td>{{ contrato.paquete.nombre }}</td>
+                    <td>{{ contrato.get_tipo_contrato_display }}</td>
+                    <td>{{ contrato.get_estado_display }}</td>
+                    <td>
+                      {% if contrato.fecha_fin %}
+                        {{ contrato.fecha_fin|date:"d/m/Y" }}
+                      {% else %}
+                        —
+                      {% endif %}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p class="mb-0">No hay contratos que coincidan con el filtro.</p>
+        {% endif %}
+      </section>
+    </div>
+  </div>
+{% endblock %}

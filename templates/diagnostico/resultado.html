@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block titulo %}Resultado del diagnóstico · Cyber Solutions RD{% endblock %}
+
+{% block contenido %}
+<section class="pantalla-compacta pantalla-resultado">
+  <div class="row g-3 align-items-stretch">
+    <div class="col-12 col-xl-3">
+      <article class="tarjeta h-100 p-3 p-lg-4 text-center d-flex flex-column justify-content-center">
+        <p class="display-4 fw-bold mb-1">
+          {{ diagnostico.indice_proteccion }} / 6
+        </p>
+        <h1 class="h6 mb-3">Índice de protección</h1>
+        <span class="insignia-riesgo {{ clase_riesgo }}">
+          Riesgo {{ diagnostico.nivel_riesgo }}
+        </span>
+      </article>
+    </div>
+
+    <div class="col-12 col-md-7 col-xl-5">
+      <article class="tarjeta h-100 p-3 p-lg-4">
+        <h2 class="h5 mb-2">Recomendaciones</h2>
+        {% if recomendaciones %}
+          <ul class="lista-recomendaciones mb-0">
+            {% for recomendacion in recomendaciones %}
+              <li>{{ recomendacion }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="mb-0">
+            Tu empresa cuenta con los seis controles consultados. Manténlos al día.
+          </p>
+        {% endif %}
+      </article>
+    </div>
+
+    <div class="col-12 col-md-5 col-xl-4">
+      <article class="tarjeta h-100 p-3 p-lg-4 d-flex flex-column">
+        <h2 class="h5 mb-2">Paquete recomendado</h2>
+        {% if diagnostico.paquete_recomendado %}
+          <p class="h5 mb-1">{{ diagnostico.paquete_recomendado.nombre }}</p>
+          <p class="fs-5 fw-bold mb-3">
+            RD$ {{ diagnostico.paquete_recomendado.precio_mensual|floatformat:"2gu" }}
+            <span class="fs-6 fw-normal text-secondary">/ mes</span>
+          </p>
+          <div class="d-flex flex-column gap-2 mt-auto">
+            <a
+              class="btn btn-outline-primary w-100"
+              href="/diagnostico/{{ diagnostico.id }}/reporte.pdf"
+            >
+              Descargar PDF
+            </a>
+            <a
+              class="btn btn-primary w-100"
+              href="/paquetes/?recomendado={{ diagnostico.paquete_recomendado.id }}"
+            >
+              Contratar
+            </a>
+          </div>
+        {% else %}
+          <p class="mb-0">No hay un paquete disponible para este diagnóstico.</p>
+        {% endif %}
+      </article>
+    </div>
+  </div>
+</section>
+{% endblock %}

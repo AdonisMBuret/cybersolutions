@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block titulo %}Crear cuenta · Cyber Solutions RD{% endblock %}
+
+{% block contenido %}
+<section class="py-3">
+  <div class="row justify-content-center">
+    <div class="col-12 col-xl-9">
+      <div class="tarjeta p-4 p-md-5">
+        <h1 class="h3 mb-2">Crear cuenta de empresa</h1>
+        <p class="text-secondary mb-4">
+          Completa los datos de tu empresa y crea tu acceso.
+        </p>
+
+        <form method="post" action="{% url 'cuentas:registro' %}" novalidate>
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+              {% for error in form.non_field_errors %}
+                <p class="mb-0">{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <h2 class="h5 mb-3">Datos de la empresa</h2>
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <label class="form-label" for="{{ form.nombre_comercial.id_for_label }}">{{ form.nombre_comercial.label }}</label>
+              {{ form.nombre_comercial }}
+              {% for error in form.nombre_comercial.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label" for="{{ form.sector.id_for_label }}">{{ form.sector.label }}</label>
+              {{ form.sector }}
+              {% for error in form.sector.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label" for="{{ form.tamano.id_for_label }}">{{ form.tamano.label }}</label>
+              {{ form.tamano }}
+              {% for error in form.tamano.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label" for="{{ form.cantidad_empleados.id_for_label }}">{{ form.cantidad_empleados.label }}</label>
+              {{ form.cantidad_empleados }}
+              {% for error in form.cantidad_empleados.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label" for="{{ form.cantidad_equipos.id_for_label }}">{{ form.cantidad_equipos.label }}</label>
+              {{ form.cantidad_equipos }}
+              {% for error in form.cantidad_equipos.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label" for="{{ form.telefono.id_for_label }}">{{ form.telefono.label }}</label>
+              {{ form.telefono }}
+              {% for error in form.telefono.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="{{ form.direccion.id_for_label }}">{{ form.direccion.label }}</label>
+              {{ form.direccion }}
+              {% for error in form.direccion.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <hr class="my-4">
+
+          <h2 class="h5 mb-3">Datos de acceso</h2>
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+              {{ form.email }}
+              {% for error in form.email.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label" for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+              {{ form.password }}
+              {% for error in form.password.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label" for="{{ form.confirmar_password.id_for_label }}">{{ form.confirmar_password.label }}</label>
+              {{ form.confirmar_password }}
+              {% for error in form.confirmar_password.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
+            <button class="btn btn-primary" type="submit">Crear cuenta</button>
+            <a class="btn btn-outline-secondary" href="{% url 'cuentas:acceso' %}">
+              Ya tengo una cuenta
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

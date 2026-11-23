@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ leccion.titulo }} | Capacitación{% endblock %}
+
+{% block contenido %}
+  <div class="mb-3">
+    <a href="{% url 'capacitacion:lista' %}">← Volver a capacitación</a>
+  </div>
+  <article class="tarjeta p-4 p-md-5">
+    <p class="text-muted mb-1">Lección · {{ leccion.duracion_minutos }} minutos</p>
+    <h1 class="h2 mb-4">{{ leccion.titulo }}</h1>
+    <div class="contenido-leccion mb-4">{{ leccion.contenido|linebreaks }}</div>
+    {% if progreso.estado == "COMPLETADA" %}
+      <p class="text-success fw-semibold">Esta lección está completada.</p>
+    {% else %}
+      <form method="post">
+        {% csrf_token %}
+        <button class="btn btn-primary" type="submit">Marcar como completada</button>
+      </form>
+    {% endif %}
+  </article>
+{% endblock %}
